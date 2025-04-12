@@ -32,9 +32,9 @@ export const WaitingRoom = ({joinChat}) =>
                     name="chatRoom"
                     placeholder="Введите название чата"></Input>
             </div>
-            <button type="submit" color="blue">
+            <Button type="submit" colorScheme="blue">
                 Присоединиться
-            </button>
+            </Button>
         </form>
     )
 }

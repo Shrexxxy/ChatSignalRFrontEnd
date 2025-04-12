@@ -1,4 +1,3 @@
-import { Provider } from './components/ui/provider';
 import {WaitingRoom} from "./components/WaitingRoom";
 import {HubConnectionBuilder} from "@microsoft/signalr";
 import {useState} from "react";
@@ -11,7 +10,7 @@ export default function App() {
     const joinChat = async (userName, chatRoom) =>
     {
         const connection = new HubConnectionBuilder()
-            .withUrl("http://localhost:7001/chat")
+            .withUrl("http://192.168.0.133:7001/chat")
             .withAutomaticReconnect()
             .build();
 
