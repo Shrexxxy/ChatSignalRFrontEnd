@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { Provider } from './components/ui/provider';
+import {WaitingRoom} from "./components/WaitingRoom";
+import {HubConnectionBuilder} from "@microsoft/signalr";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function App() {
+    const joinChat = async (userName, chatRoom) =>
+    {
+        const connection = new HubConnectionBuilder()
+            .withUrl("http://localhost:7001/chat")
+            .withAutomaticReconnect()
+            .build();
+
+        connection.on("ReceiveMessage", (userName, message) => {
+            console.log(userName);
+            console.log(message);
+        });
+
+
+
+        try
+        {
+            await connection.start();
+            await connection.invoke("JoinChat", {userName, chatRoom});
+            console.log(connection);
+        }
+        catch (error)
+        {
+            console.log(error);
+        }
+    }
+
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <WaitingRoom joinChat={joinChat}></WaitingRoom>
+        </div>
+    );
 }
-
-export default App;
