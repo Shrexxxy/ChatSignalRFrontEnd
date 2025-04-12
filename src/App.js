@@ -16,8 +16,7 @@ export default function App() {
             .build();
 
         connection.on("ReceiveMessage", (userName, message) => {
-            console.log(userName);
-            console.log(message);
+            setMessages(messages => [...messages, {userName, message}]);
         });
 
         try
@@ -25,6 +24,7 @@ export default function App() {
             await connection.start();
             await connection.invoke("JoinChat", {userName, chatRoom});
 
+            setChatRoom(chatRoom);
             setConnection(connection);
         }
         catch (error)
@@ -33,9 +33,26 @@ export default function App() {
         }
     };
 
+    const sendMessage = (message) =>
+    {
+      connection.invoke("SendMessage", message);
+    };
+
+    const closeChat = async () =>
+    {
+        await connection.stop();
+        setConnection(null);
+    }
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            {connection ? <Chat messages={messages} chatRoom={chatRoom} closeChat/> : <WaitingRoom joinChat={joinChat}/>}
+            {connection
+                ? <Chat
+                messages={messages}
+                chatRoom={chatRoom}
+                closeChat={closeChat}
+                sendMessage={sendMessage}/>
+                : <WaitingRoom joinChat={joinChat}/>}
         </div>
     );
 }
